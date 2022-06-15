@@ -18,6 +18,11 @@ import site.metacoding.restdoc.domain.User;
 @RestController
 public class UserApiController {
 
+    // save > post 저장
+    // deleteById > delete 삭제
+    // updateById > put 수정
+    // findById > get
+    // findAll > get
     @PostMapping("/user")
     public ResponseEntity<?> save(@RequestBody User user) {
         // userService.회원가입(user);

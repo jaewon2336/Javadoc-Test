@@ -42,7 +42,6 @@ asciidoctor {
      inputs.dir snippetsDir
 }
 
-
 bootJar {
     dependsOn asciidoctor
     copy {
