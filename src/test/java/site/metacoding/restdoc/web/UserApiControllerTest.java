@@ -2,8 +2,10 @@ package site.metacoding.restdoc.web;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -15,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import site.metacoding.restdoc.domain.User;
 import site.metacoding.restdoc.util.keystore.MediaTypeImpl;
 
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
 @AutoConfigureMockMvc // IoC 컨테이너에 MockMvc 등록
 @SpringBootTest
 public class UserApiControllerTest {
@@ -26,7 +29,8 @@ public class UserApiControllerTest {
     public void save_test() throws Exception {
         // given
         String content = new ObjectMapper().writeValueAsString(
-                User.builder().username("ssar").password("1234").email("ssar@nate.com").build()); // json 데이터
+                User.builder().username("ssar").password("1234").email("ssar@nate.com").build()); // json
+                                                                                                  // 데이터
 
         // when
         ResultActions resultActions = mockMvc.perform(
@@ -34,7 +38,8 @@ public class UserApiControllerTest {
                         .post("/api/user")
                         .content(content)
                         .contentType(MediaTypeImpl.APPLICATION_JSON_UTF8)); // MediaType.APPLICATION_JSON_UTF8
-                                                                            // @Deprecated 되어서 Impl로 만들어준 것
+                                                                            // @Deprecated 되어서
+                                                                            // Impl로 만들어준 것
 
         // then
         resultActions
@@ -43,7 +48,8 @@ public class UserApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("ssar"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("1234"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("ssar@nate.com"))
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("/post/api/user"));
     }
 
     @Test
@@ -63,7 +69,8 @@ public class UserApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("ssar"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("1234"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("ssar@nate.com"))
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("/get/api/user"));
     }
 
     @Test
@@ -86,6 +93,7 @@ public class UserApiControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("[1].username").value("cos"))
                 .andExpect(MockMvcResultMatchers.jsonPath("[1].password").value("1234"))
                 .andExpect(MockMvcResultMatchers.jsonPath("[1].email").value("cos@nate.com"))
-                .andDo(MockMvcResultHandlers.print());
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(MockMvcRestDocumentation.document("/get/api/users"));
     }
 }
